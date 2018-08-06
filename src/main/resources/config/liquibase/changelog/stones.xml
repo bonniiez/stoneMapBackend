@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+    <property name="now" value="now()" dbms="mysql"/>
+    <property name="autoIncrement" value="true"/>
+
+
+    <property name="floatType" value="float4" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
+    <!--
+        JHipster core tables.
+        The initial schema has the '00000000000001' id, so that it is over-written if we re-generate it.
+    -->
+    <changeSet id="stone-table" author="bonnie">
+        <createTable tableName="stone">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="stone_name" type="varchar(255)" >
+                <constraints  nullable="true"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="stone_location">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="stone_id" type="bigint" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="latitude" type="${floatType}" >
+                <constraints  nullable="false"/>
+            </column>
+            <column name="longitude" type="${floatType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+
+        <dropDefaultValue tableName="stone_location" columnName="created_date" columnDataType="datetime"/>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/stones.csv"
+                  separator=";"
+                  tableName="stone"/>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/stone_locations.csv"
+                  separator=";"
+                  tableName="stone_location">
+        </loadData>
+
+        <addForeignKeyConstraint baseColumnNames="stone_id"
+                                 baseTableName="stone_location"
+                                 constraintName="fk_stone_location_stone_id_stone_stone_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="stone"/>
+    </changeSet>
+</databaseChangeLog>
