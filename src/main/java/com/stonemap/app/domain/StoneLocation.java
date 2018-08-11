@@ -1,7 +1,10 @@
 package com.stonemap.app.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.Instant;
 
 @Entity
 //@Table(name = "stoneLocation")
@@ -20,6 +23,11 @@ public class StoneLocation  implements Serializable {
 
     @Column(name = "longitude")
     private Float longitude;
+
+    @Column(name = "created_date")
+    @JsonFormat(shape= JsonFormat.Shape.NUMBER, pattern="s")
+    private Instant createdDate = Instant.now();
+
 
 
     public Long getId() {
@@ -52,5 +60,13 @@ public class StoneLocation  implements Serializable {
 
     public void setStone(Stone stone) {
         this.stone = stone;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
     }
 }

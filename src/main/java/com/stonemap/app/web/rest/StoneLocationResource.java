@@ -66,7 +66,6 @@ public class StoneLocationResource {
         Stone stone = stoneRepository.findById(stoneLocation.getStoneId()).get();
         stoneLocationToSave.setStone(stone);
         stoneLocationRepository.save(stoneLocationToSave);
-
         return ResponseEntity.ok(stoneLocationToSave);
     }
 
